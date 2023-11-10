@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manipulação de Arquivos</title>
+    <style>
+        input {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="nome" placeholder="Digite seu nome">
+    <input type="number" id="idade" min="0" placeholder="Digite sua idade">
+    <input type="email" id="email" placeholder="Digite seu e-mail">
+    <input type="tel" id="telefone" placeholder="Digite seu telefone">
+    <button id="btSalvar">Salvar</button>
+    <input type="file" id="btCarregar">
+    <script>
+        const inNome = document.querySelector("#nome");
+        const inIdade = document.querySelector("#idade");
+        const inEmail = document.querySelector("#email");
+        const inTelefone = document.querySelector("#telefone");
+        const btSalvar = document.querySelector("#btSalvar");
+        const btCarregar = document.querySelector("#btCarregar");
+
+        btSalvar.onclick = function() {
+            const dados = {
+                nome: inNome.value,
+                idade: inIdade.value,
+                email: inEmail.value,
+                telefone: inTelefone.value
+            }
+
+            const arquivo = new Blob([JSON.stringify(dados)], {type: "text/plain"});
+
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(arquivo));
+            link.setAttribute("download", "dados.json");
+            link.click();
+        }
+
+        btCarregar.onchange = function(e) {
+            const file = e.target.files[0];
+
+            const reader = new FileReader();
+            reader.readAsText(file);
+
+            reader.onload = function() {
+                const conteudo = reader.result;
+                const dados = JSON.parse(conteudo);
+
+                inNome.value = dados.nome;
+                inIdade.value = dados.idade;
+                inEmail.value = dados.email;
+                inTelefone.value = dados.telefone;
+            }
+        }
+    </script>
+</body>
+</html>
